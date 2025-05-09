@@ -248,7 +248,7 @@ const App = () => {
 
                 <div className="mb-4">
                   <p className="font-semibold">Base Stats:</p>
-                  <div className="grid grid-cols-2 gap-2 mt-1">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-2 mt-1">
                     {selectedPokemon.stats.map((stat: any) => (
                       <div
                         key={stat.stat.name}
