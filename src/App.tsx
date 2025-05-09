@@ -1,14 +1,15 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState, useEffect } from "react";
 import Lottie from "lottie-react";
 import loadingAnimation from "./assets/loading-pokemon.json";
 
 const App = () => {
   const [searchInput, setSearchInput] = useState("");
-  const [pokemon, setPokemon] = useState(null);
+  const [pokemon, setPokemon] = useState<any>(null);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
-  const [team, setTeam] = useState([]);
-  const [selectedPokemon, setSelectedPokemon] = useState(null);
+  const [error, setError] = useState<string | null>(null);
+  const [team, setTeam] = useState<any[]>([]);
+  const [selectedPokemon, setSelectedPokemon] = useState<any>(null);
 
   // Load team from localStorage on component mount
   useEffect(() => {
@@ -41,14 +42,16 @@ const App = () => {
       setPokemon(data);
       setSelectedPokemon(data);
     } catch (err) {
-      setError("Error fetching Pokémon: " + err.message);
+      setError(
+        "Error fetching Pokémon: " + (err as { [key: string]: string }).message
+      );
     } finally {
       setLoading(false);
     }
   };
 
   // Function to fetch a Pokémon by name
-  const fetchPokemonByName = async (name) => {
+  const fetchPokemonByName = async (name: string): Promise<void> => {
     if (!name.trim()) return;
 
     try {
@@ -65,7 +68,7 @@ const App = () => {
       const data = await response.json();
       setPokemon(data);
       setSelectedPokemon(data);
-    } catch (err) {
+    } catch (err: any) {
       setError("Error: " + err.message);
     } finally {
       setLoading(false);
@@ -73,7 +76,7 @@ const App = () => {
   };
 
   // Function to save team to localStorage
-  const saveTeamToStorage = (updatedTeam) => {
+  const saveTeamToStorage = (updatedTeam: any[]) => {
     try {
       localStorage.setItem("pokemonTeam", JSON.stringify(updatedTeam));
     } catch (e) {
@@ -104,7 +107,7 @@ const App = () => {
   };
 
   // Function to remove a Pokémon from the team
-  const removeFromTeam = (id) => {
+  const removeFromTeam = (id: string) => {
     const updatedTeam = team.filter((p) => p.id !== id);
     setTeam(updatedTeam);
     saveTeamToStorage(updatedTeam);
@@ -115,18 +118,18 @@ const App = () => {
   };
 
   // Function to select a Pokémon from the team to view details
-  const selectPokemonFromTeam = (pokemon) => {
+  const selectPokemonFromTeam = (pokemon: any) => {
     setSelectedPokemon(pokemon);
     setPokemon(pokemon);
   };
 
   // Function to handle search input changes
-  const handleSearchChange = (e) => {
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchInput(e.target.value);
   };
 
   // Function to handle search submission
-  const handleSearchSubmit = (e) => {
+  const handleSearchSubmit = (e: any) => {
     if (e) e.preventDefault();
     fetchPokemonByName(searchInput);
   };
@@ -231,7 +234,7 @@ const App = () => {
                   <div>
                     <p className="font-semibold">Types:</p>
                     <div className="flex gap-2 mt-1">
-                      {selectedPokemon.types.map((type) => (
+                      {selectedPokemon.types.map((type: any) => (
                         <span
                           key={type.type.name}
                           className="px-2 py-1 bg-blue-100 text-blue-800 rounded capitalize text-sm"
@@ -246,7 +249,7 @@ const App = () => {
                 <div className="mb-4">
                   <p className="font-semibold">Base Stats:</p>
                   <div className="grid grid-cols-2 gap-2 mt-1">
-                    {selectedPokemon.stats.map((stat) => (
+                    {selectedPokemon.stats.map((stat: any) => (
                       <div
                         key={stat.stat.name}
                         className="flex items-center gap-2"
